@@ -111,13 +111,21 @@ function cadastrar(){
 }
 
 function login(){
- let user=JSON.parse(localStorage.getItem('user'));
+ let user = JSON.parse(localStorage.getItem('user'));
 
- if(user && user.tel==loginTel.value && user.senha==loginSenha.value){
+ let telDigitado = document.getElementById('loginTel').value;
+ let senhaDigitada = document.getElementById('loginSenha').value;
+
+ if(!user){
+  alert('Nenhum usuário cadastrado! Faça o cadastro primeiro.');
+  return;
+ }
+
+ if(user.tel === telDigitado && user.senha === senhaDigitada){
   document.getElementById('boasVindas').innerText="Bem-vindo, "+user.nome;
   show('painel');
  }else{
-  alert('Erro no login');
+  alert('Telefone ou senha incorretos!');
  }
 }
 
