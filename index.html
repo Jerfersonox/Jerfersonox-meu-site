@@ -1,12 +1,264 @@
-├── index.html
-├── login.html
-├── style.css
-├── jogo-memoria.html
-├── cores.html
-├── atencao.html
-├── ranking.html
-├── dicas.html
-├── sinais.html
-├── crises.html
-├── rotina.html
-└── dicas-gerais.html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Mundo Inclusivo</title>
+
+<style>
+body{
+ margin:0;
+ font-family:Arial;
+ text-align:center;
+ background:linear-gradient(135deg,#6a11cb,#2575fc);
+ color:white;
+}
+
+input,button{
+ padding:10px;
+ margin:5px;
+ border-radius:10px;
+ border:none;
+}
+
+button{
+ cursor:pointer;
+}
+
+.hidden{
+ display:none;
+}
+
+.card{
+ background:white;
+ color:#333;
+ padding:15px;
+ border-radius:15px;
+ margin:10px;
+ display:block;
+ text-decoration:none;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+<h1>🔐 Login</h1>
+
+<input id="user" placeholder="Usuário"><br>
+<input id="pass" type="password" placeholder="Senha"><br>
+
+<button onclick="login()">Entrar</button>
+<button onclick="cadastro()">Cadastrar</button>
+
+<p id="msg"></p>
+</div>
+
+<!-- MENU -->
+<div id="menu" class="hidden">
+<h1>🧠 Mundo Inclusivo</h1>
+
+<button onclick="abrir('memoria')">🧩 Memória</button>
+<button onclick="abrir('cores')">🎨 Cores</button>
+<button onclick="abrir('atencao')">🎯 Atenção</button>
+<button onclick="abrir('ranking')">🏆 Ranking</button>
+<button onclick="abrir('dicas')">📘 Dicas</button>
+
+<br><br>
+<button onclick="logout()">Sair</button>
+</div>
+
+<!-- JOGO MEMORIA -->
+<div id="memoria" class="hidden">
+<h2>🧩 Memória</h2>
+<p id="score">0</p>
+<div id="game"></div>
+<button onclick="voltar()">⬅ Voltar</button>
+</div>
+
+<!-- CORES -->
+<div id="cores" class="hidden">
+<h2>🎨 Cores</h2>
+<button onclick="ver('red')" style="background:red">Vermelho</button>
+<button onclick="ver('blue')" style="background:blue">Azul</button>
+<p id="msgCor"></p>
+<button onclick="voltar()">⬅ Voltar</button>
+</div>
+
+<!-- ATENÇÃO -->
+<div id="atencao" class="hidden">
+<h2>🎯 Atenção</h2>
+<button onclick="ganhar()">CLIQUE RÁPIDO</button>
+<p id="msgAt"></p>
+<button onclick="voltar()">⬅ Voltar</button>
+</div>
+
+<!-- RANKING -->
+<div id="ranking" class="hidden">
+<h2>🏆 Ranking</h2>
+<ul id="lista"></ul>
+<button onclick="voltar()">⬅ Voltar</button>
+</div>
+
+<!-- DICAS -->
+<div id="dicas" class="hidden">
+<h2>📘 Autismo e TDAH</h2>
+
+<p><b>Sinais:</b> dificuldade social, pouco contato visual</p>
+<p><b>Crises:</b> manter calma e ambiente tranquilo</p>
+<p><b>Rotina:</b> ajuda na organização da criança</p>
+<p><b>Dicas:</b> paciência, amor e acompanhamento</p>
+
+<button onclick="voltar()">⬅ Voltar</button>
+</div>
+
+<script>
+
+// LOGIN
+function cadastro(){
+ let u=user.value;
+ let p=pass.value;
+
+ if(u && p){
+  localStorage.setItem("user_"+u,p);
+  msg.innerText="✅ Cadastrado";
+ }
+}
+
+function login(){
+ let u=user.value;
+ let p=pass.value;
+
+ if(localStorage.getItem("user_"+u)===p){
+  localStorage.setItem("logado",u);
+  mostrarMenu();
+ }else{
+  msg.innerText="❌ Erro";
+ }
+}
+
+function logout(){
+ localStorage.removeItem("logado");
+ location.reload();
+}
+
+function mostrarMenu(){
+ login.style.display="none";
+ menu.classList.remove("hidden");
+}
+
+// TELAS
+function abrir(id){
+ document.querySelectorAll("body > div").forEach(d=>d.classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
+
+ if(id==="memoria") iniciarMemoria();
+ if(id==="ranking") carregarRanking();
+}
+
+function voltar(){
+ document.querySelectorAll("body > div").forEach(d=>d.classList.add("hidden"));
+ menu.classList.remove("hidden");
+}
+
+// MEMORIA
+function iniciarMemoria(){
+ game.innerHTML="";
+ score.innerText=0;
+
+ let usuario=localStorage.getItem("logado");
+ let emojis=["🐶","🐱","🍎","🍌"];
+ let cards=[...emojis,...emojis].sort(()=>0.5-Math.random());
+
+ let first=null, second=null, lock=false, pontos=0;
+
+ cards.forEach(e=>{
+  let b=document.createElement("button");
+  b.innerText="?";
+
+  b.onclick=()=>{
+   if(lock||b.innerText!=="?") return;
+
+   b.innerText=e;
+
+   if(!first){
+    first=b;
+   }else{
+    second=b;
+    lock=true;
+
+    if(first.innerText===second.innerText){
+     pontos+=10;
+     score.innerText=pontos;
+
+     first=null;
+     second=null;
+     lock=false;
+
+     if(pontos===40){
+      salvar(usuario,pontos);
+      alert("🎉 venceu!");
+     }
+
+    }else{
+     setTimeout(()=>{
+      first.innerText="?";
+      second.innerText="?";
+      first=null;
+      second=null;
+      lock=false;
+     },600);
+    }
+   }
+  };
+
+  game.appendChild(b);
+ });
+}
+
+function salvar(user,p){
+ let atual=localStorage.getItem("score_"+user)||0;
+ if(p>atual){
+  localStorage.setItem("score_"+user,p);
+ }
+}
+
+// CORES
+function ver(c){
+ msgCor.innerText = c==="red" ? "✅ Acertou" : "❌ Errou";
+}
+
+// ATENÇÃO
+function ganhar(){
+ msgAt.innerText="🔥 Muito bem!";
+}
+
+// RANKING
+function carregarRanking(){
+ lista.innerHTML="";
+
+ for(let i=0;i<localStorage.length;i++){
+  let k=localStorage.key(i);
+
+  if(k.startsWith("score_")){
+   let user=k.replace("score_","");
+   let score=localStorage.getItem(k);
+
+   let li=document.createElement("li");
+   li.innerText=user+" - "+score;
+   lista.appendChild(li);
+  }
+ }
+}
+
+// AUTO LOGIN
+if(localStorage.getItem("logado")){
+ mostrarMenu();
+}
+
+</script>
+
+</body>
+</html>
