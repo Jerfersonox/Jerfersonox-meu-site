@@ -1,18 +1,55 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+
+<!-- ESSA LINHA É O MAIS IMPORTANTE -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Mundo Inclusivo</title>
 
 <style>
+
 body{
  margin:0;
  font-family:Arial;
  text-align:center;
  background:linear-gradient(135deg,#667eea,#764ba2);
  color:white;
- overflow-x:hidden;
+}
+
+/* CONTAINER */
+.container{
+ padding:20px;
+ max-width:500px;
+ margin:auto;
+}
+
+/* BOTÕES GRANDES */
+button{
+ width:90%;
+ padding:15px;
+ margin:10px 0;
+ border:none;
+ border-radius:15px;
+ font-size:18px;
+ font-weight:bold;
+ cursor:pointer;
+ transition:0.3s;
+}
+
+button:hover{
+ transform:scale(1.05);
+}
+
+/* INPUT */
+input{
+ width:90%;
+ padding:15px;
+ margin:8px 0;
+ border-radius:12px;
+ border:none;
+ font-size:16px;
 }
 
 /* SPLASH */
@@ -26,15 +63,10 @@ body{
  align-items:center;
  flex-direction:column;
  z-index:999;
- animation:fadeOut 1s ease 2.5s forwards;
-}
-
-@keyframes fadeOut{
- to{opacity:0; visibility:hidden;}
 }
 
 #logo{
- font-size:35px;
+ font-size:32px;
  animation:pulse 1s infinite;
 }
 
@@ -44,38 +76,20 @@ body{
  100%{transform:scale(1);}
 }
 
-/* BOTÕES */
-button{
- padding:12px;
- margin:6px;
- border:none;
- border-radius:12px;
- cursor:pointer;
- transition:0.3s;
- font-weight:bold;
-}
-
-button:hover{
- transform:scale(1.1);
-}
-
 /* TELAS */
 .hidden{display:none;}
 
-.fade{
- animation:fadeIn 0.8s;
-}
-
-@keyframes fadeIn{
- from{opacity:0;}
- to{opacity:1;}
-}
-
 /* JOGO */
+#game{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:10px;
+}
+
 #game button{
- width:60px;
- height:60px;
- font-size:20px;
+ width:100%;
+ height:70px;
+ font-size:22px;
 }
 
 /* VITÓRIA */
@@ -90,23 +104,13 @@ button:hover{
  justify-content:center;
  align-items:center;
  flex-direction:column;
- font-size:30px;
- animation:fadeIn 1s;
+ font-size:26px;
 }
 
 </style>
 </head>
 
 <body>
-
-<!-- SOM -->
-<audio id="clickSound">
-<source src="https://www.soundjay.com/buttons/sounds/button-16.mp3">
-</audio>
-
-<audio autoplay loop>
-<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
-</audio>
 
 <!-- SPLASH -->
 <div id="splash">
@@ -115,39 +119,41 @@ button:hover{
 </div>
 
 <!-- LOGIN -->
-<div id="login" class="fade">
-<h1>🔐 Login</h1>
-<input id="user" placeholder="Usuário"><br>
-<input id="pass" type="password" placeholder="Senha"><br>
+<div id="login" class="container">
+<h2>🔐 Login</h2>
+
+<input id="user" placeholder="Usuário">
+<input id="pass" type="password" placeholder="Senha">
+
 <button onclick="login()">Entrar</button>
 <button onclick="cadastro()">Cadastrar</button>
+
 <p id="msg"></p>
 </div>
 
 <!-- MENU -->
-<div id="menu" class="hidden fade">
-<h1>🧠 Mundo Inclusivo</h1>
+<div id="menu" class="container hidden">
+<h2>🧠 Mundo Inclusivo</h2>
 
-<button onclick="abrir('memoria')">🧩 Memória</button>
+<button onclick="abrir('memoria')">🧩 Jogo Memória</button>
 <button onclick="abrir('cores')">🎨 Cores</button>
 <button onclick="abrir('atencao')">🎯 Atenção</button>
 <button onclick="abrir('ranking')">🏆 Ranking</button>
 <button onclick="abrir('dicas')">📘 Dicas</button>
 
-<br><br>
 <button onclick="logout()">Sair</button>
 </div>
 
 <!-- MEMORIA -->
-<div id="memoria" class="hidden fade">
+<div id="memoria" class="container hidden">
 <h2>🧩 Memória</h2>
-<p id="score">0</p>
+<p>Pontos: <span id="score">0</span></p>
 <div id="game"></div>
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
 
 <!-- CORES -->
-<div id="cores" class="hidden fade">
+<div id="cores" class="container hidden">
 <h2>🎨 Cores</h2>
 <button onclick="ver('red')" style="background:red">Vermelho</button>
 <button onclick="ver('blue')" style="background:blue">Azul</button>
@@ -156,7 +162,7 @@ button:hover{
 </div>
 
 <!-- ATENÇÃO -->
-<div id="atencao" class="hidden fade">
+<div id="atencao" class="container hidden">
 <h2>🎯 Atenção</h2>
 <button onclick="ganhar()">CLIQUE RÁPIDO</button>
 <p id="msgAt"></p>
@@ -164,18 +170,18 @@ button:hover{
 </div>
 
 <!-- RANKING -->
-<div id="ranking" class="hidden fade">
+<div id="ranking" class="container hidden">
 <h2>🏆 Ranking</h2>
 <ul id="lista"></ul>
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
 
 <!-- DICAS -->
-<div id="dicas" class="hidden fade">
+<div id="dicas" class="container hidden">
 <h2>📘 Autismo e TDAH</h2>
 <p>Sinais: dificuldade social e comunicação</p>
 <p>Crises: manter ambiente calmo</p>
-<p>Rotina: ajuda muito no desenvolvimento</p>
+<p>Rotina: ajuda no desenvolvimento</p>
 <p>Dicas: paciência e apoio</p>
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
@@ -188,18 +194,16 @@ button:hover{
 
 <script>
 
-let clickSound = document.getElementById("clickSound");
-
 // splash
 setTimeout(()=>{
  splash.style.display="none";
-},3000);
+},2000);
 
 // login
 function cadastro(){
  let u=user.value;
  let p=pass.value;
- if(u&&p){
+ if(u && p){
   localStorage.setItem("user_"+u,p);
   msg.innerText="Cadastrado!";
  }
@@ -223,15 +227,13 @@ function logout(){
 }
 
 function mostrarMenu(){
- login.style.display="none";
+ login.classList.add("hidden");
  menu.classList.remove("hidden");
 }
 
 // navegação
 function abrir(id){
- clickSound.play();
-
- document.querySelectorAll("body > div").forEach(d=>d.classList.add("hidden"));
+ document.querySelectorAll(".container").forEach(d=>d.classList.add("hidden"));
  document.getElementById(id).classList.remove("hidden");
 
  if(id==="memoria") iniciarMemoria();
@@ -239,8 +241,7 @@ function abrir(id){
 }
 
 function voltar(){
- clickSound.play();
- document.querySelectorAll("body > div").forEach(d=>d.classList.add("hidden"));
+ document.querySelectorAll(".container").forEach(d=>d.classList.add("hidden"));
  menu.classList.remove("hidden");
 }
 
@@ -260,12 +261,9 @@ function iniciarMemoria(){
   b.innerText="?";
 
   b.onclick=()=>{
-   clickSound.play();
-
    if(lock||b.innerText!=="?") return;
 
    b.innerText=e;
-   b.style.transform="scale(1.2)";
 
    if(!first){
     first=b;
@@ -311,13 +309,11 @@ function fecharWin(){
 
 // cores
 function ver(c){
- clickSound.play();
  msgCor.innerText = c==="red" ? "Acertou!" : "Errou!";
 }
 
 // atenção
 function ganhar(){
- clickSound.play();
  msgAt.innerText="Muito bem!";
 }
 
