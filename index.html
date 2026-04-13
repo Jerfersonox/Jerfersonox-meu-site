@@ -4,38 +4,37 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mundo Inclusivo Pro</title>
+<title>Crianças Autistas Sempre Felizes</title>
 
 <style>
 body{
  margin:0;
  font-family:Arial;
  background:linear-gradient(135deg,#667eea,#764ba2);
- color:#333;
  display:flex;
  justify-content:center;
  align-items:center;
  height:100vh;
+ color:#333;
 }
 
 /* CARD */
 .box{
  background:white;
- padding:25px;
- border-radius:20px;
+ padding:30px 25px;
+ border-radius:25px;
  width:95%;
  max-width:420px;
  box-shadow:0 15px 40px rgba(0,0,0,0.3);
  text-align:center;
- animation:fade 0.5s;
+ animation:fade 0.6s;
+ border-top:5px solid #00c853;
 }
 
 @keyframes fade{
  from{opacity:0; transform:translateY(20px);}
  to{opacity:1;}
 }
-
-h2{margin-bottom:15px;}
 
 input{
  width:100%;
@@ -60,8 +59,8 @@ button{
 }
 
 button:hover{
- background:#5a67d8;
  transform:scale(1.03);
+ background:#5a67d8;
 }
 
 .hidden{display:none}
@@ -99,7 +98,6 @@ button:hover{
  flex-direction:column;
  color:white;
  font-size:26px;
- animation:fade 0.5s;
 }
 
 /* MODO CALMO */
@@ -111,31 +109,40 @@ button:hover{
 
 <body>
 
+<!-- LOGIN BONITO -->
 <div id="loginBox" class="box">
-<h2>🔐 Login</h2>
 
-<input id="user" placeholder="Usuário">
-<input id="pass" type="password" placeholder="Senha">
+<h1>🧩 Crianças Autistas Sempre Felizes 💙</h1>
+<p style="color:#666;">🌈 Inclusão • Amor • Respeito</p>
+
+<div style="font-size:40px;">🧩 🌈 💙</div>
+
+<h2>🔐 Entrar ou Cadastrar</h2>
+
+<input id="user" placeholder="👤 Usuário">
+<input id="pass" type="password" placeholder="🔒 Senha">
 
 <button onclick="login()">Entrar</button>
-<button onclick="cadastro()">Cadastrar</button>
+<button onclick="cadastro()" style="background:#00c853;">Cadastrar</button>
 
 <p id="msg"></p>
 </div>
 
+<!-- MENU -->
 <div id="menuBox" class="box hidden menu">
-<h2>🧠 Mundo Inclusivo</h2>
+<h2>🧠 Menu</h2>
 
 <button onclick="abrirJogo(4)">🟢 Fácil</button>
 <button onclick="abrirJogo(6)">🟡 Médio</button>
 <button onclick="abrirJogo(8)">🔴 Difícil</button>
 
-<button onclick="abrirInfo()">📘 Conteúdo Completo</button>
+<button onclick="abrirInfo()">📘 Conteúdo</button>
 <button onclick="modoCalmo()">🌿 Modo Calmo</button>
 
 <button onclick="logout()">Sair</button>
 </div>
 
+<!-- JOGO -->
 <div id="jogoBox" class="box hidden">
 <h2>🧩 Jogo da Memória</h2>
 <p>Pontos: <span id="score">0</span></p>
@@ -143,6 +150,7 @@ button:hover{
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
 
+<!-- INFORMAÇÕES -->
 <div id="infoBox" class="box hidden" style="text-align:left; max-height:500px; overflow:auto;">
 <h2 style="text-align:center;">📘 Guia Completo</h2>
 
@@ -153,7 +161,7 @@ button:hover{
 
 <h3>🧒 4 a 10 anos</h3>
 <p>• Dificuldade social</p>
-<p>• Crises de irritação</p>
+<p>• Irritação</p>
 <p>• Hiperatividade (TDAH)</p>
 
 <h3>👦 Adolescente</h3>
@@ -161,7 +169,7 @@ button:hover{
 <p>• Dificuldade emocional</p>
 
 <h3>👨 Adultos</h3>
-<p>• Problemas de foco</p>
+<p>• Falta de foco</p>
 <p>• Dificuldade social</p>
 <p>• Desorganização</p>
 
@@ -170,20 +178,20 @@ button:hover{
 <p><b>TDAH:</b> atenção/impulsividade</p>
 
 <h3>💡 Dicas para pais</h3>
-<p>✔ Criar rotina diária</p>
-<p>✔ Usar reforço positivo</p>
-<p>✔ Evitar excesso de estímulo</p>
-<p>✔ Manter calma nas crises</p>
-<p>✔ Estimular com jogos</p>
+<p>✔ Criar rotina</p>
+<p>✔ Ter paciência</p>
+<p>✔ Evitar barulho</p>
+<p>✔ Reforçar comportamento positivo</p>
 
 <h3>😡 Crises</h3>
-<p>✔ Falar baixo e com calma</p>
-<p>✔ Tirar de ambientes barulhentos</p>
+<p>✔ Falar com calma</p>
+<p>✔ Reduzir estímulos</p>
 <p>✔ Dar espaço</p>
 
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
 
+<!-- VITÓRIA -->
 <div id="win">
 🎉 Parabéns!
 <button onclick="fecharWin()">Continuar</button>
@@ -211,7 +219,7 @@ function login(){
   loginBox.classList.add("hidden");
   menuBox.classList.remove("hidden");
  }else{
-  msg.innerText="Erro no login";
+  msg.innerText="Usuário ou senha incorretos";
  }
 }
 
