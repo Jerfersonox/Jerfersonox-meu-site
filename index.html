@@ -2,30 +2,26 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-
-<!-- ESSA LINHA É O MAIS IMPORTANTE -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Mundo Inclusivo</title>
 
 <style>
-
 body{
  margin:0;
  font-family:Arial;
  text-align:center;
  background:linear-gradient(135deg,#667eea,#764ba2);
  color:white;
+ transition:0.5s;
 }
 
-/* CONTAINER */
 .container{
  padding:20px;
  max-width:500px;
  margin:auto;
 }
 
-/* BOTÕES GRANDES */
 button{
  width:90%;
  padding:15px;
@@ -35,59 +31,31 @@ button{
  font-size:18px;
  font-weight:bold;
  cursor:pointer;
- transition:0.3s;
 }
 
-button:hover{
- transform:scale(1.05);
-}
-
-/* INPUT */
 input{
  width:90%;
  padding:15px;
  margin:8px 0;
  border-radius:12px;
  border:none;
- font-size:16px;
 }
 
-/* SPLASH */
-#splash{
- position:fixed;
- width:100%;
- height:100%;
- background:#764ba2;
- display:flex;
- justify-content:center;
- align-items:center;
- flex-direction:column;
- z-index:999;
-}
-
-#logo{
- font-size:32px;
- animation:pulse 1s infinite;
-}
-
-@keyframes pulse{
- 0%{transform:scale(1);}
- 50%{transform:scale(1.2);}
- 100%{transform:scale(1);}
-}
-
-/* TELAS */
 .hidden{display:none;}
+
+/* MODO CALMO */
+.calmo{
+ background:#a8dadc !important;
+ color:#000;
+}
 
 /* JOGO */
 #game{
  display:grid;
- grid-template-columns:repeat(4,1fr);
  gap:10px;
 }
 
 #game button{
- width:100%;
  height:70px;
  font-size:22px;
 }
@@ -106,28 +74,21 @@ input{
  flex-direction:column;
  font-size:26px;
 }
-
 </style>
 </head>
 
 <body>
 
-<!-- SPLASH -->
-<div id="splash">
-<div id="logo">🧠 Mundo Inclusivo</div>
-<p>Carregando...</p>
-</div>
+<audio id="somEntrada" src="https://cdn.pixabay.com/audio/2022/03/15/audio_115b9bce58.mp3"></audio>
+<audio id="somWin" src="https://cdn.pixabay.com/audio/2022/03/10/audio_c5c8c0b6c2.mp3"></audio>
 
 <!-- LOGIN -->
 <div id="login" class="container">
 <h2>🔐 Login</h2>
-
 <input id="user" placeholder="Usuário">
 <input id="pass" type="password" placeholder="Senha">
-
 <button onclick="login()">Entrar</button>
 <button onclick="cadastro()">Cadastrar</button>
-
 <p id="msg"></p>
 </div>
 
@@ -135,16 +96,16 @@ input{
 <div id="menu" class="container hidden">
 <h2>🧠 Mundo Inclusivo</h2>
 
-<button onclick="abrir('memoria')">🧩 Jogo Memória</button>
-<button onclick="abrir('cores')">🎨 Cores</button>
-<button onclick="abrir('atencao')">🎯 Atenção</button>
-<button onclick="abrir('ranking')">🏆 Ranking</button>
-<button onclick="abrir('dicas')">📘 Dicas</button>
+<button onclick="abrirJogo(4)">🟢 Fácil</button>
+<button onclick="abrirJogo(6)">🟡 Médio</button>
+<button onclick="abrirJogo(8)">🔴 Difícil</button>
+
+<button onclick="modoCalmo()">🌿 Modo Calmo</button>
 
 <button onclick="logout()">Sair</button>
 </div>
 
-<!-- MEMORIA -->
+<!-- JOGO -->
 <div id="memoria" class="container hidden">
 <h2>🧩 Memória</h2>
 <p>Pontos: <span id="score">0</span></p>
@@ -152,54 +113,21 @@ input{
 <button onclick="voltar()">⬅ Voltar</button>
 </div>
 
-<!-- CORES -->
-<div id="cores" class="container hidden">
-<h2>🎨 Cores</h2>
-<button onclick="ver('red')" style="background:red">Vermelho</button>
-<button onclick="ver('blue')" style="background:blue">Azul</button>
-<p id="msgCor"></p>
-<button onclick="voltar()">⬅ Voltar</button>
-</div>
-
-<!-- ATENÇÃO -->
-<div id="atencao" class="container hidden">
-<h2>🎯 Atenção</h2>
-<button onclick="ganhar()">CLIQUE RÁPIDO</button>
-<p id="msgAt"></p>
-<button onclick="voltar()">⬅ Voltar</button>
-</div>
-
-<!-- RANKING -->
-<div id="ranking" class="container hidden">
-<h2>🏆 Ranking</h2>
-<ul id="lista"></ul>
-<button onclick="voltar()">⬅ Voltar</button>
-</div>
-
-<!-- DICAS -->
-<div id="dicas" class="container hidden">
-<h2>📘 Autismo e TDAH</h2>
-<p>Sinais: dificuldade social e comunicação</p>
-<p>Crises: manter ambiente calmo</p>
-<p>Rotina: ajuda no desenvolvimento</p>
-<p>Dicas: paciência e apoio</p>
-<button onclick="voltar()">⬅ Voltar</button>
-</div>
-
 <!-- VITÓRIA -->
 <div id="win" class="hidden">
-🎉 Parabéns!<br>
+🎉 Parabéns!<br><br>
 <button onclick="fecharWin()">Continuar</button>
 </div>
 
 <script>
 
-// splash
-setTimeout(()=>{
- splash.style.display="none";
-},2000);
+// SOM AO ENTRAR
+window.onload = () => {
+ document.getElementById("somEntrada").play();
+ document.getElementById("win").classList.add("hidden");
+}
 
-// login
+// LOGIN
 function cadastro(){
  let u=user.value;
  let p=pass.value;
@@ -214,45 +142,41 @@ function login(){
  let p=pass.value;
 
  if(localStorage.getItem("user_"+u)===p){
-  localStorage.setItem("logado",u);
-  mostrarMenu();
+  login.classList.add("hidden");
+  menu.classList.remove("hidden");
  }else{
   msg.innerText="Erro";
  }
 }
 
 function logout(){
- localStorage.removeItem("logado");
  location.reload();
 }
 
-function mostrarMenu(){
- login.classList.add("hidden");
- menu.classList.remove("hidden");
-}
-
-// navegação
-function abrir(id){
- document.querySelectorAll(".container").forEach(d=>d.classList.add("hidden"));
- document.getElementById(id).classList.remove("hidden");
-
- if(id==="memoria") iniciarMemoria();
- if(id==="ranking") carregarRanking();
-}
-
+// NAVEGAÇÃO
 function voltar(){
- document.querySelectorAll(".container").forEach(d=>d.classList.add("hidden"));
+ memoria.classList.add("hidden");
  menu.classList.remove("hidden");
 }
 
-// memória
-function iniciarMemoria(){
+// MODO CALMO (AUTISMO)
+function modoCalmo(){
+ document.body.classList.toggle("calmo");
+}
+
+// JOGO
+function abrirJogo(n){
+ menu.classList.add("hidden");
+ memoria.classList.remove("hidden");
+
+ game.style.gridTemplateColumns = "repeat(4,1fr)";
+
+ let emojis = ["🐶","🐱","🍎","🍌","🍇","🍉","🚗","⚽"];
+ let usados = emojis.slice(0,n);
+ let cards = [...usados,...usados].sort(()=>0.5-Math.random());
+
  game.innerHTML="";
  score.innerText=0;
-
- let user=localStorage.getItem("logado");
- let emojis=["🐶","🐱","🍎","🍌"];
- let cards=[...emojis,...emojis].sort(()=>0.5-Math.random());
 
  let first=null, second=null, lock=false, pontos=0;
 
@@ -276,9 +200,9 @@ function iniciarMemoria(){
      score.innerText=pontos;
      first=null; second=null; lock=false;
 
-     if(pontos===40){
-      salvar(user,pontos);
-      win.classList.remove("hidden");
+     if(pontos===n*10){
+      document.getElementById("somWin").play();
+      document.getElementById("win").classList.remove("hidden");
      }
 
     }else{
@@ -286,7 +210,7 @@ function iniciarMemoria(){
       first.innerText="?";
       second.innerText="?";
       first=null; second=null; lock=false;
-     },600);
+     },800);
     }
    }
   };
@@ -295,46 +219,10 @@ function iniciarMemoria(){
  });
 }
 
-function salvar(u,p){
- let atual=localStorage.getItem("score_"+u)||0;
- if(p>atual){
-  localStorage.setItem("score_"+u,p);
- }
-}
-
+// FECHAR
 function fecharWin(){
- win.classList.add("hidden");
+ document.getElementById("win").classList.add("hidden");
  voltar();
-}
-
-// cores
-function ver(c){
- msgCor.innerText = c==="red" ? "Acertou!" : "Errou!";
-}
-
-// atenção
-function ganhar(){
- msgAt.innerText="Muito bem!";
-}
-
-// ranking
-function carregarRanking(){
- lista.innerHTML="";
- for(let i=0;i<localStorage.length;i++){
-  let k=localStorage.key(i);
-  if(k.startsWith("score_")){
-   let user=k.replace("score_","");
-   let score=localStorage.getItem(k);
-   let li=document.createElement("li");
-   li.innerText=user+" - "+score;
-   lista.appendChild(li);
-  }
- }
-}
-
-// auto login
-if(localStorage.getItem("logado")){
- mostrarMenu();
 }
 
 </script>
